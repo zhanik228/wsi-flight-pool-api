@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -60,9 +61,5 @@ class AuthController extends Controller
 
     public function user(Request $request) {
         return $request->user();
-    }
-
-    public function userBookings(Request $request) {
-        return $request->user()->bookings;
     }
 }

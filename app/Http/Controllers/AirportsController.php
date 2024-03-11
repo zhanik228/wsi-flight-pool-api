@@ -14,11 +14,21 @@ class AirportsController extends Controller
         $airports = Airport::query()
             ->select('*')
             ->where(function (Builder $subQuery) use ($query) {
-                $subQuery->where('city', 'like', "% $query %")
+                $subQuery->where('city', 'like', '%'.$query.'%')
                 ->orWhere('name', 'like', '%'.$query.'%')
                 ->orWhere('iata', 'like', '%'.$query.'%');
-            });
+            })
+            ->get();
 
-        return $airports->get();
+        return [
+            'data' => [
+                'items' => collect($airports)->map(function($airport) use ($airports) {
+                    return [
+                        'name' => $airport->name,
+                        'iata' => $airport->iata,
+                    ];
+                })
+            ]
+        ];
     }
 }

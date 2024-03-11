@@ -4,6 +4,7 @@ namespace App\Http\Controllers\flights;
 
 use App\Http\Controllers\Controller;
 use App\Models\Airport;
+use App\Models\Booking;
 use App\Models\Flight;
 use Illuminate\Http\Request;
 
@@ -18,10 +19,18 @@ class FlightController extends Controller
         $fromId = Airport::where('iata', $from)->first()->id;
         $toId = Airport::where('iata', $to)->first()->id;
 
-
-        return Flight::where('from_id', $fromId)
+//        return $fromId.$toId;
+        $flightsTo = Flight::where('from_id', $fromId)
             ->where('to_id', $toId)
-            ->get();
+            ->get()
+            ->map(function($flight) {
+                return $flight->getFilteredFlights();
+            });
 
+        return [
+            'data' => [
+                'flights_to' => $flightsTo
+            ]
+        ];
     }
 }

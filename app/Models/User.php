@@ -25,10 +25,6 @@ class User extends Authenticatable
         'password'
     ];
 
-    public function bookings() {
-        return $this->belongsTo(Booking::class);
-    }
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -37,6 +33,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'id',
+        'api_token',
+        'created_at',
+        'updated_at'
     ];
 
     /**

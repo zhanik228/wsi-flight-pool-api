@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -32,5 +33,19 @@ class Handler extends ExceptionHandler
 //        $this->renderable(function (ValidationException $e, Request $request) {
 //
 //        });
+    }
+
+    public function render($request, \Exception|Throwable $exception) {
+        if ($exception instanceof ValidationException) {
+            return response()->json([
+                'error' => [
+                    'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'message' => 'Validation error',
+                    'errors' => $exception->errors(),
+                ]
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return parent::render($request, $exception);
     }
 }

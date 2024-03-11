@@ -10,16 +10,20 @@ class BookingController extends Controller
 {
     public function getBooking(Request $request, $code) {
         $booking = Booking::where('code', $code)->first();
+        $totalCost = 0;
+
+        $flights = [];
+
+        $flights[] = $booking->getFlightDataWithoutKeys('flight_fromm');
+        $flights[] = $booking->getFlightDataWithoutKeys('flight_too');
+
+        collect($flights)->pluck('cost')->map(function($cost) use(&$totalCost) {
+            $totalCost += $cost;
+        });
 
         return [
             'data' => [
-                'code' => $booking->code,
-                'cost' => 0,
-                'flights' => [
-                    $booking->flight_fromm,
-                    'to' => $booking->flight_too
-                ],
-                'passengers' => $booking->passengers
+                'items' => $booking->bookingInfo()
             ]
         ];
     }
@@ -48,6 +52,24 @@ class BookingController extends Controller
                         return [];
                     })
                 ]
+            ]
+        ];
+    }
+
+    public function userBookings(Request $request) {
+        $documentNumber = $request->user()->document_number;
+
+        $bookings = Booking::whereHas('passenger', function ($query) use ($documentNumber) {
+            $query->where('document_number', $documentNumber);
+        })->get();
+
+        $bookings = collect($bookings)->map(function($booking) {
+            return $booking->bookingInfo();
+        });
+
+        return [
+            'data' => [
+                'items' => $bookings
             ]
         ];
     }

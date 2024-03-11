@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Route::middleware('json.response')->group(function() {
     Route::middleware('auth:sanctum')->group(function() {
-        Route::get('user/booking', [\App\Http\Controllers\auth\AuthController::class, 'userBookings']);
+        Route::get('user/booking', [\App\Http\Controllers\booking\BookingController::class, 'userBookings']);
+        Route::get('user', [\App\Http\Controllers\auth\AuthController::class, 'user']);
     });
 });
