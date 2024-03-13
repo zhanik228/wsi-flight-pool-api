@@ -19,7 +19,6 @@ class FlightController extends Controller
         $fromId = Airport::where('iata', $from)->first()->id;
         $toId = Airport::where('iata', $to)->first()->id;
 
-//        return $fromId.$toId;
         $flightsTo = Flight::where('from_id', $fromId)
             ->where('to_id', $toId)
             ->get()

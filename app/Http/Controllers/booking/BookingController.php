@@ -4,6 +4,7 @@ namespace App\Http\Controllers\booking;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Passenger;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -72,5 +73,52 @@ class BookingController extends Controller
                 'items' => $bookings
             ]
         ];
+    }
+
+    public function selection(Request $request) {
+
+        $request->validate([
+            'passenger' => 'required',
+            'seat' => 'required',
+            'type' => 'required'
+        ]);
+
+        $passenger = Passenger::find($request->passenger);
+        $seat = $request->seat;
+        $type = $request->type;
+
+        if (!$passenger) {
+            return response()->json([
+                'status' => 'failed',
+                'no passenger found'
+            ], 404);
+        }
+
+//        проверить если место уже забронировано
+        $seatIsOccupied = Passenger::where("place_$type", $seat)
+                            ->where('id', '!=', $passenger->id)
+                            ->exists();
+
+        if ($seatIsOccupied) {
+            return response()->json([
+                'error' => [
+                    'code' => 422,
+                    'message' => 'Seat is occupied'
+                ]
+            ]);
+        }
+
+//        проверять и заменять места если места пустые
+        switch ($type) {
+            case 'from':
+                    $passenger->update(['place_from' => $seat]);
+                    return $passenger;
+                    break;
+            case 'back':
+                    $passenger->update(['place_back' => $seat]);
+                    break;
+            default:
+                    return 'no flight type selected';
+        }
     }
 }

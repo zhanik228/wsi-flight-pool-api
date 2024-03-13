@@ -10,4 +10,9 @@ class Passenger extends Model
     use HasFactory;
 
     protected $hidden = ['booking_id', 'created_at', 'updated_at'];
+
+    protected $fillable = [
+        'place_from',
+        'place_back'
+    ];
 }

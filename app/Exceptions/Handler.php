@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -44,6 +45,15 @@ class Handler extends ExceptionHandler
                     'errors' => $exception->errors(),
                 ]
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            return response()->json([
+                'error' => [
+                    'code' => 401,
+                    'message' => 'Unauthorized'
+                ]
+            ], 401);
         }
 
         return parent::render($request, $exception);
