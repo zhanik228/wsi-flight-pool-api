@@ -19,6 +19,7 @@ return new class extends Migration
             $table->time('time_from');
             $table->time('time_to');
             $table->integer('cost')->length(11);
+            $table->integer('places_count')->nullable();
             $table->timestamps();
         });
     }

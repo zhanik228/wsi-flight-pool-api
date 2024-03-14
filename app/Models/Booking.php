@@ -15,6 +15,15 @@ class Booking extends Model
         'flight_too',
         'passengers',
     ];
+
+    protected $fillable = [
+        'flight_from',
+        'flight_back',
+        'date_from',
+        'date_back',
+        'code',
+        'created_at'
+    ];
     protected $hidden = ['id'];
 
     public function getFlightsAttribute() {
@@ -50,7 +59,9 @@ class Booking extends Model
     }
 
     public function getFlightDataWithoutKeys($flight_type) {
-        return collect($this->$flight_type->getFilteredFlights());
+        if ($this->$flight_type) {
+            return collect($this->$flight_type->getFilteredFlights());
+        }
     }
 
     public function passenger() {

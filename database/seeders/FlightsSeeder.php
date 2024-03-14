@@ -38,7 +38,16 @@ class FlightsSeeder extends Seeder
                 'time_to' => Carbon::now()->addDay()->toTimeString(),
                 'cost' => '9500',
                 'created_at' => now(),
-            ]
+            ],
+            [
+                'flight_code' => Str::random(5),
+                'from_id' => $airportPeterburg->id,
+                'to_id' => $airportSheremyetovo->id,
+                'time_from' => Carbon::now()->toTimeString(),
+                'time_to' => Carbon::now()->addDay()->toTimeString(),
+                'cost' => '9200',
+                'created_at' => now(),
+            ],
         ];
 
         DB::table('flights')->insert($flights);

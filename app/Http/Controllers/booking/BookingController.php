@@ -4,8 +4,10 @@ namespace App\Http\Controllers\booking;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Flight;
 use App\Models\Passenger;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -75,6 +77,44 @@ class BookingController extends Controller
         ];
     }
 
+    public function booking(Request $request) {
+        $request->validate([
+            'flight_from' => 'required',
+            'flight_back' => 'required',
+            'passengers' => 'required'
+        ]);
+
+        $flight_from = Flight::find($request->flight_from['id']);
+        $flight_back = Flight::find($request->flight_back['id']);
+        $passengers = $request->passengers;
+        $arrPass = [];
+
+        $createdBooking = Booking::create([
+            'flight_from' => $flight_from->id,
+            'flight_back' => $flight_back->id,
+            'date_from' => $request->flight_from['date'],
+            'date_back' => $request->flight_back['date'],
+            'code' => Str::random(5)
+        ]);
+
+        foreach($passengers AS $passenger) {
+            $arrPass[] = Passenger::create([
+                'booking_id' => $createdBooking->id,
+                'first_name' => $passenger['first_name'],
+                'last_name' => $passenger['last_name'],
+                'birth_date' => $passenger['birth_date'],
+                'document_number' => $passenger['document_number'],
+                'place_from' => strval(random_int(0, 12).Str::random(1)),
+                'place_back' => strval(random_int(0, 12).Str::random(1))
+            ]);
+        }
+        return response()->json([
+            'data' => [
+                'code' => $createdBooking->code
+            ]
+        ], 201);
+    }
+
     public function selection(Request $request) {
 
         $request->validate([
@@ -89,9 +129,9 @@ class BookingController extends Controller
 
         if (!$passenger) {
             return response()->json([
-                'status' => 'failed',
-                'no passenger found'
-            ], 404);
+                'code' => 403,
+                'message' => 'Passenger does not appply to booking'
+            ], 403);
         }
 
 //        проверить если место уже забронировано

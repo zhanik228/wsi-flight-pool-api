@@ -20,11 +20,11 @@ class Flight extends Model
         return $this->id;
     }
     public function getFlightFrommAttribute() {
-        return $this->flightFrom;
+        return $this->flightFrom->getFilteredAirports();
     }
 
     public function getFlightTooAttribute() {
-        return $this->flightTo;
+        return $this->flightTo->getFilteredAirports();
     }
 
     public function flightFrom() {
@@ -47,8 +47,8 @@ class Flight extends Model
         return [
             'flight_id' => $this->id,
             'flight_code' => $this->flight_code,
-            'from' => $this->flightFrom,
-            'to' => $this->flightTo,
+            'from' => $this->flightFrom->getFilteredAirports(),
+            'to' => $this->flightTo->getFilteredAirports(),
             'cost' => $this->cost,
 //            'availability' => 188 - intval($this->backBooking->bookingPassengers->count())
         ];

@@ -19,8 +19,15 @@ class FlightController extends Controller
         $fromId = Airport::where('iata', $from)->first()->id;
         $toId = Airport::where('iata', $to)->first()->id;
 
-        $flightsTo = Flight::where('from_id', $fromId)
-            ->where('to_id', $toId)
+//        Booking::where('flight_from', );
+
+        $flightsTo = Flight::where('to_id', $toId)
+            ->get()
+            ->map(function($flight) {
+                return $flight->getFilteredFlights();
+            });
+
+        $flightsFrom = Flight::where('from_id', $fromId)
             ->get()
             ->map(function($flight) {
                 return $flight->getFilteredFlights();
@@ -28,7 +35,8 @@ class FlightController extends Controller
 
         return [
             'data' => [
-                'flights_to' => $flightsTo
+                'flights_to' => $flightsTo,
+                'flights_from' => $flightsFrom
             ]
         ];
     }

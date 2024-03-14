@@ -21,6 +21,7 @@ Route::middleware('json.response')->group(function () {
 
     Route::get('airport', [\App\Http\Controllers\AirportsController::class, 'list']);
     Route::get('flight', [\App\Http\Controllers\flights\FlightController::class, 'search']);
+    Route::post('booking', [\App\Http\Controllers\booking\BookingController::class, 'booking']);
     Route::get('booking/{code}', [\App\Http\Controllers\booking\BookingController::class, 'getBooking']);
     Route::get('booking/{code}/seat', [\App\Http\Controllers\booking\BookingController::class, 'occupiedSeats']);
     Route::patch('booking/{code}/seat', [\App\Http\Controllers\booking\BookingController::class, 'selection']);

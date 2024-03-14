@@ -21,8 +21,8 @@ class PassengersSeeder extends Seeder
                 'last_name' => 'example_last_name',
                 'birth_date' => '2004-04-04',
                 'document_number' => '1111111111',
-                'place_from' => 'MSC',
-                'place_back' => 'SVO'
+                'place_from' => '1c',
+                'place_back' => '2d'
             ]
         ];
 
